@@ -1,0 +1,81 @@
+This module is intended to run on the computer that is NOT connected
+to the internet, but that wishes to gain access via BlueTooth
+connection to Android Smartphone running the BlueNet app.
+
+To build, run:
+
+ant
+
+To run, use the following:
+
+java -jar dist/BlueNetConnect.jar
+
+If you see this error when trying to run the above command:
+
+"Exception in thread "main" java.lang.UnsatisfiedLinkError: no unix-java in java.library.path"
+
+Try this alternate command instead:
+
+java -Djava.library.path=/usr/lib/jni -jar dist/BlueNetConnect.jar
+
+System requirements:
+
+Bluetooth hardware supported by the Bluecove library.
+
+The following package (as named on Ubuntu) libunixsocket-java is
+required and must be installed.
+
+
+Troubleshooting:
+
+On Windows 7, it always detected the winsock driver, but I knew I should be using the widcomm driver.  To fix this, download the broadcomm driver:
+
+http://www.broadcom.com/support/bluetooth/update.php
+
+The setup program stalled while detecting the internal bluetooth device.  To remedy this so that the driver could be installed, I had to insert a USB bluetooth device during the detection.  The installation continued at that point and proceeded to finish.
+
+On Android Device: If the app freezes during Initialization, please try disabling bluetooth first and trying again.  If that does not work, please restart your phone, as the bluetooth subsystem appears to be in a state that is not working for BlueNet.
+
+On GNU/Linux systems, you may encounter the following errors:
+
+Exception in thread "Thread-1" java.lang.UnsatisfiedLinkError: no unix-java in java.library.path
+
+This error usually indicates that the Java Unix socket libraries are
+not installed on the system.  Under Ubuntu for example, the required
+package name to install is libunixsocket-java.
+
+"Exception in thread "main" javax.bluetooth.BluetoothStateException: Failed to connect to bus Connection refused"
+
+In this case, remove the contents of /var/run/dbus/*, for example:
+
+mv /var/run/dbus/* /tmp
+
+And then restart dbus:
+
+service dbus restart [ OR /etc/init.d/dbus restart ]
+
+Also, make sure that bluetoothd is running (start it manually if
+necessary), or else you may see the below error:
+
+"SEVERE: Failed to execute BlueNetConnect: org.freedesktop.DBus$Error$ServiceUnknown: The name org.bluez was not provided by any .service files"
+
+
+
+"javax.bluetooth.BluetoothStateException: Can't find default adapter"
+
+Please make sure that your computer has a working bluetooth adapter,
+and that it's connected.
+
+
+
+LINUX:
+
+If you see this error often:
+BROKEN (DOESN'T SOLVE)
+2011-10-27 17:10:22 CDT | INFO Failed to open connection:
+btspp://F8DB7F59286E:21;authenticate=true;encrypt=true;master=true
+Exception: java.io.IOException: Failed to connect. [13] Permission
+denied
+
+Restart DBUS, Restart bluetoothd, reset bluetooth (hciconfig hci0
+reset), then restart

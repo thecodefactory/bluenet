@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. -->
+<project basedir="." default="make_jar" name="BlueNetConnect">
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../usr/local/eclipse"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <property name="jar_name" value="BlueNetConnect.jar"/>
+    <property location="build/assets" name="assets.dest"/>
+    <property location="src/com/nm/bluenetconnect/assets" name="assets.src.dir"/>
+
+    <path id="BlueNetConnect.classpath">
+        <pathelement location="lib/BlueNetCommon.jar"/>
+        <pathelement location="lib/bluecove-2.1.1-SNAPSHOT.jar"/>
+        <pathelement location="lib/bluecove-bluez-2.1.1-SNAPSHOT.jar"/>
+        <pathelement location="lib/commons-lang3-3.0.1.jar"/>
+        <pathelement location="lib/dbus.jar"/>
+        <pathelement location="lib/unix.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="dist"/>
+        <mkdir dir="build"/>
+        <mkdir dir="${assets.dest}"/>
+    </target>
+    <target name="clean">
+        <delete dir="build"/>
+        <delete dir="dist"/>
+        <delete dir="${assets.dest}"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects"/>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="build" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="BlueNetConnect.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="BlueNetConnect">
+        <java classname="com.nm.bluenetconnect.BlueNetConnect" failonerror="true" fork="yes">
+            <classpath refid="BlueNetConnect.classpath"/>
+        </java>
+    </target>
+    <target name="make_jar" depends="init,build"
+            description="(Creates the jar file distribution of this project)">
+      <copy toDir="${assets.dest}">
+        <fileset casesensitive="yes" dir="${assets.src.dir}">
+          <include name="*"/>
+        </fileset>
+      </copy>
+      <echo message="JAR -  build ->> ${jar_name}"/>
+      <delete verbose="true">
+        <fileset file="${jar_name}" />
+      </delete>
+      <jar destfile="build/temp.jar" filesetmanifest="skip">
+        <zipgroupfileset dir="lib" includes="*.jar"/>
+        <manifest>
+          <attribute name="Main-Class" value="com.nm.bluenetconnect.BlueNetConnect"/>
+        </manifest>
+      </jar>
+    
+      <zip basedir="build" destfile="dist/${jar_name}">
+        <zipfileset src="build/temp.jar" excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
+      </zip>
+      <delete file="${build}/temp.jar"/>
+    </target>
+</project>

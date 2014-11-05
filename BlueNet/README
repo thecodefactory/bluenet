@@ -1,0 +1,11 @@
+This app is used to route data from a non-connected internet computer
+to the smart phone running it, essentially proxying all packet data
+(including DNS) to allow internet access via Bluetooth.
+
+NOTE: This project was in the works and work was halted when bluetooth
+tethering became a standard option on most Android smart phones.  This
+code is left for reference or for anyone to work with.
+
+Please contact neillm@thecodefactory.org regarding your usage and the
+license that it's under if you choose to use any part of it for any
+reason.
